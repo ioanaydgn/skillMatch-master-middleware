@@ -21,6 +21,6 @@ const version = '/v1';
 
 app.use(`${version}/department`, departmentRouter);
 app.use(`${version}/project`, projectRouter);
-app.use(`${version}/`, organizationRouter);
+app.use(`${version}/organization`, organizationRouter);
 
 export default app;

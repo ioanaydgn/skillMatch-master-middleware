@@ -23,6 +23,7 @@ class DepartmentController {
         return res.status(404).send("Organization not found");
       }
 
+
       // Check if department with the same name already exists
       const existingDepartment = await Department.findOne({ departmentName });
       if (existingDepartment) {
@@ -33,7 +34,7 @@ class DepartmentController {
       const newDepartment = new Department({
         departmentName,
         departmentId: uuidv4(), // Generate a unique department ID
-        organizationId: organization._id, // Assign the organization ID
+        organizationId: organization.organizationId, // Assign the organization ID
       });
 
       // Save the new department to the database
@@ -88,42 +89,42 @@ class DepartmentController {
   // Update department information for the specified departmentId
   public UpdateDepartment = async (req: Request, res: Response) => {
     this.functionName = "updateDepartment";
-
+  
     try {
       const { departmentId } = req.params;
       const { departmentName, organizationId } = req.body;
-
+  
       // Check if departmentId is provided
       if (!departmentId) {
         return res.status(400).send("Department ID is required");
       }
-
+  
       // Find the department by its ID
-      const department = await Department.findOne({ departmentId });
+      const department = await Department.findOne({ departmentId }); // Specify the type as Department
       if (!department) {
         return res.status(404).send("Department not found");
       }
-
+  
       // Check if organizationId is provided
       if (!organizationId) {
         return res.status(400).send("organizationId is required");
       }
-
+  
       // Find the organization by its ID
-      const organization = await Organization.findOne({ organizationId });
+      const organization = await Organization.findOne({ organizationId }); // Specify the type as Organization
       if (!organization) {
         return res.status(404).send("Organization not found");
       }
-
+  
       // Check if department with the same name already exists
       const existingDepartment = await Department.findOne({ departmentName });
-      if (existingDepartment) {
+      if (existingDepartment && existingDepartment.departmentId !== department.departmentId) { // Make sure to exclude the current department from the check
         return res.status(400).send("Department already exists");
       }
-
+  
       // Update the department details
       department.departmentName = departmentName;
-      department.organizationId = organization._id;
+      department.organizationId = organization?.organizationId ?? ''; // Assuming organizationId is the MongoDB ObjectId
 
       // Save the updated department to the database
       await department.save();

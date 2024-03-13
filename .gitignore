@@ -1,0 +1,5 @@
+# Ignore .evm files
+.env
+
+# Ignore npm modules
+node_modules

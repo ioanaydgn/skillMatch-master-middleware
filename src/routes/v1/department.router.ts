@@ -4,7 +4,7 @@ import { authToken } from "middlewares";
 let departmentRouter = Router();
 
 
-departmentRouter.post("/" ,(req, res) => departmentController.CreateDepartment(req, res));
+departmentRouter.post("/create" ,(req, res) => departmentController.CreateDepartment(req, res));
 departmentRouter.delete("/:departmentId" ,(req, res) => departmentController.DeleteDepartment(req, res));
 departmentRouter.put("/:departmentId" ,(req, res) => departmentController.UpdateDepartment(req, res));
 departmentRouter.get("/:departmentId",(req, res) => departmentController.GetDepartment(req, res));
