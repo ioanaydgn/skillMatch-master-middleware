@@ -1,20 +1,20 @@
 {
-    "compilerOptions": {
-      "module": "CommonJS",
-      "esModuleInterop": true,
-      "target": "es6",
-      "strict": true,
-      "moduleResolution": "node",
-      "sourceMap": true,
-      "outDir": "dist",
-      "baseUrl": "src",
-      "paths": {
-        "@app":["app/"],
-        "@utils":["utils"],
-        "@config":["config"],
-        "@models":["database/models"],
-        "@routes":["routes/v1"],
-        "@middlewares":["middlewares"],
-      }
-    },
+  "compilerOptions": {
+    "module": "CommonJS",
+    "esModuleInterop": true,
+    "target": "es6",
+    "strict": true,
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "outDir": "dist",
+    "baseUrl": "src",
+    "paths": {
+      "@app": ["app/"],
+      "@utils": ["utils"],
+      "@config": ["config"],
+      "@models": ["database/models"],
+      "@routes": ["routes/v1"],
+      "@middlewares": ["middlewares"]
+    }
   }
+}

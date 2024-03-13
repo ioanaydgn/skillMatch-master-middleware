@@ -51,6 +51,7 @@ class DepartmentController {
     }
   };
 
+  // Delete an existing department endpoint
   public DeleteDepartment = async (req: Request, res: Response) => {
     this.functionName = "deleteDepartment";
 
@@ -84,6 +85,7 @@ class DepartmentController {
     }
   };
 
+  // Update department information for the specified departmentId
   public UpdateDepartment = async (req: Request, res: Response) => {
     this.functionName = "updateDepartment";
 
@@ -138,16 +140,82 @@ class DepartmentController {
     }
   };
 
-  // Assign Department Manager Endpoint
-  AssignDepartmentManager = async (req: Request, res: Response) => {
-    
+  // Give all information about the department
+  public GetDepartment = async (req: Request, res: Response) => {
+    this.functionName = "getDepartment";
+
+    try {
+      const { departmentId } = req.params;
+
+      // Check if departmentId is provided
+      if (!departmentId) {
+        return res.status(400).send("Department ID is required");
+      }
+
+      // Find the department by its ID
+      const department = await Department.findOne({ departmentId });
+      if (!department) {
+        return res.status(404).send("Department not found");
+      }
+
+      // Respond with success message and department details
+      res.status(200).send({
+        status: 200,
+        message: "Department retrieved successfully",
+        data: department,
+      });
+    } catch (error) {
+      console.error("Error retrieving department:", error);
+      res.status(500).send("Internal server error");
+    }
+  }
+
+  // Assign Department Manager endpoint
+  public AssignDepartmentManager = async (req: Request, res: Response) => {
+    this.functionName = "assignDepartmentManager";
+
+    try {
+      let { departmentId, userId } = req.body;
+
+      // Check if departmentId & userID are provided
+      if (!departmentId || !userId) {
+        return res.status(400).send("Department ID and User ID are required");
+      }
+
+      // Find the department by its ID
+      let department = await Department.findOne({ departmentId });
+      if (!department) {
+        return res.status(404).send("Department not found");
+      }
+
+      // Find the user by its ID
+      let user = await User.findOne({ userId });
+      if (!user) {
+        return res.status(404).send("User not found");
+      }
+
+      // Assign the department manager
+      department.managerId = userId;
+
+      // Save the updated department to the database
+      await department.save();
+
+      // Respond with success message and department details
+      res.status(200).send({
+        status: 200,
+        message: "Department manager assigned successfully",
+        data: department,
+      });
+    } catch (error) {
+      console.error("Error updating department:", error);
+      res.status(500).send("Internal server error");
+    }
   };
 
   // Assign Department Members Endpoint
   AssignDepartmentMembers = async (req: Request, res: Response) => {
-    
+    this.functionName = "assignDepartmentMembers";
   };
-
 }
 
 export default new DepartmentController();

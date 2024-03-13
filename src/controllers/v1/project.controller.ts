@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 import { Request, Response } from "express";
 import { Project, Organization } from "@models";
 import cors from "cors";
+import Team from "database/models/team.model";
 
 class ProjectController {
   internalError: string = "Internal server error";
@@ -157,5 +158,31 @@ class ProjectController {
       res.status(500).send("Internal server error");
     }
   };
+
+  // Find Available Employees Endpoint
+  public FindAvailableEmployees = async (req: Request, res: Response) => {
+    //Implement an endpoint to allow Project Managers to find available employees for a project based on specified criteria.
+    this.functionName = "findAvailableEmployees";
+    try {
+      let { projectId } = req.body;
+      
+      let availableEmployees = await Team.find({ projectId:projectId});
+      
+      return res.status(200).json({
+        status: 200,
+        message: "Available Employees found",
+        data: availableEmployees,
+      });
+
+
+
+
+    } catch (error) {
+      console.error("Error updating project:", error);
+      res.status(500).send("Internal server error");
+    }
+
+  }
+
 }
 export default new ProjectController();

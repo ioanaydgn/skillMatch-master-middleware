@@ -1,4 +1,6 @@
 import departmentRouter from "./department.router";
-import projectRouter from "./project.route";
+import projectRouter from "./project.router";
+import organizationRouter from "./organization.router";
 
-export { departmentRouter, projectRouter }
+
+export { departmentRouter, projectRouter, organizationRouter}
