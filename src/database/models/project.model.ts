@@ -9,8 +9,8 @@ const projectSchema = new mongoose.Schema({
   projectStatus: {type : String, required: true},
   projectDescription: {type : String, required: true},
   technologyStack: [{ type: String ,required: true}], 
-  customRolesId: { type: Schema.Types.ObjectId, ref: 'customteamroles' ,required: false },
-  organizationId: { type: Schema.Types.ObjectId, ref: 'organizations' ,required: true },
+  customRolesId: { type: Schema.Types.String, ref: 'customteamroles' ,required: false },
+  organizationId: { type: Schema.Types.String, ref: 'organizations' ,required: true },
 });
 
 const Project = mongoose.model("project", projectSchema);

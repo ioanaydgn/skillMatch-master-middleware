@@ -50,7 +50,7 @@ class ProjectController {
         projectDescription,
         technologyStack,
         customRolesId,
-        organizationId: organization._id, // Assign the organization ID
+        organizationId: organization.organizationId, // Assign the organization ID
       });
 
       // Save the new project to the database
