@@ -23,11 +23,15 @@ class DepartmentController {
         return res.status(404).send("Organization not found");
       }
 
-
-      // Check if department with the same name already exists
-      const existingDepartment = await Department.findOne({ departmentName });
+      // Check if department with the same name already exists within the organization
+      const existingDepartment = await Department.findOne({
+        organizationId,
+        departmentName,
+      });
       if (existingDepartment) {
-        return res.status(400).send("Department already exists");
+        return res
+          .status(400)
+          .send("Department already exists within the organization");
       }
 
       // Create a new department object
@@ -89,42 +93,46 @@ class DepartmentController {
   // Update department information for the specified departmentId
   public UpdateDepartment = async (req: Request, res: Response) => {
     this.functionName = "updateDepartment";
-  
+
     try {
       const { departmentId } = req.params;
       const { departmentName, organizationId } = req.body;
-  
+
       // Check if departmentId is provided
       if (!departmentId) {
         return res.status(400).send("Department ID is required");
       }
-  
+
       // Find the department by its ID
       const department = await Department.findOne({ departmentId }); // Specify the type as Department
       if (!department) {
         return res.status(404).send("Department not found");
       }
-  
+
       // Check if organizationId is provided
       if (!organizationId) {
         return res.status(400).send("organizationId is required");
       }
-  
+
       // Find the organization by its ID
       const organization = await Organization.findOne({ organizationId }); // Specify the type as Organization
       if (!organization) {
         return res.status(404).send("Organization not found");
       }
-  
+
       // Check if department with the same name already exists
       const existingDepartment = await Department.findOne({ departmentName });
-      if (existingDepartment && existingDepartment.departmentId !== department.departmentId) { // Make sure to exclude the current department from the check
+      if (
+        existingDepartment &&
+        existingDepartment.departmentId !== department.departmentId
+      ) {
+        // Make sure to exclude the current department from the check
         return res.status(400).send("Department already exists");
       }
-  
+
       // Update the department details
       department.departmentName = departmentName;
-      department.organizationId = organization?.organizationId ?? ''; // Assuming organizationId is the MongoDB ObjectId
+      department.organizationId = organization?.organizationId ?? ""; // Assuming organizationId is the MongoDB ObjectId
 
       // Save the updated department to the database
       await department.save();
@@ -169,7 +177,7 @@ class DepartmentController {
       console.error("Error retrieving department:", error);
       res.status(500).send("Internal server error");
     }
-  }
+  };
 
   // Assign Department Manager endpoint
   public AssignDepartmentManager = async (req: Request, res: Response) => {
