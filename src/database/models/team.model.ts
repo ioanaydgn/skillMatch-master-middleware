@@ -5,9 +5,9 @@ const teamSchema = new mongoose.Schema({
     assignmentStatus: { type: Boolean, required: true},
     workHours: { type: String, required: true},
     teamComments: { type: String, required: true},
-    customTeamRolesId: { type: Schema.Types.String, ref: 'customteamroles' ,required: true },
+    customTeamRolesId: { type: Schema.Types.String, ref: 'customteamroles' ,required: false },
     projectId: { type: Schema.Types.String, ref: 'projects' ,required: true },
-    userId: { type: Schema.Types.String, ref: 'users' ,required: true },
+    memberIds: [{ type: Schema.Types.Array, ref: "users", required: false }]
 });
 
 const Team = mongoose.model("team", teamSchema);

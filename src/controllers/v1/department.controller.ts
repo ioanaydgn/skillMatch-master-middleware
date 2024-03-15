@@ -224,7 +224,71 @@ class DepartmentController {
   // Assign Department Members Endpoint
   AssignDepartmentMembers = async (req: Request, res: Response) => {
     this.functionName = "assignDepartmentMembers";
+    try {
+      const { departmentId, userIds } = req.body;
+      // Check if departmentId and userIds are provided
+      if (!departmentId || !userIds) {
+        return res.status(400).send("Department ID and User IDs are required");
+      }
+      // Find the department by its ID
+      const department = await Department.findOne({ departmentId });
+      if (!department) {
+        return res.status(404).send("Department not found");
+      }
+      // Find the users by their IDs
+      const users = await User.find({ userId: { $in: userIds } });
+      if (!users || users.length === 0) {
+        return res.status(404).send("Users not found");
+      }
+      // Assign the department members
+      department.memberIds = userIds;
+      // Save the updated department to the database
+      await department.save();
+      // Respond with success message and department details
+      res.status(200).send({
+        status: 200,
+        message: "Department members assigned successfully",
+        data: department,
+      });
+    } catch (error) {
+      console.error("Error assigning department members:", error);
+      res.status(500).send("Internal server error");
+    }
   };
+
+  // Remove Department Members Endpoint
+  /*
+  RemoveDepartmentMembers = async (req: Request, res: Response) => {
+    this.functionName = "removeDepartmentMembers";
+    try {
+      const { departmentId, userIds } = req.body;
+      // Check if departmentId and userIds are provided
+      if (!departmentId || !userIds) {
+        return res.status(400).send("Department ID and User IDs are required");
+      }
+      // Find the department by its ID
+      const department = await Department.findOne({ departmentId });
+      if (!department) {
+        return res.status(404).send("Department not found");
+      }
+      // Remove the department members
+      department.memberIds = department.memberIds.filter(
+        (memberId) => !userIds.includes(memberId)
+      );
+      // Save the updated department to the database
+      await department.save();
+      // Respond with success message and department details
+      res.status(200).send({
+        status: 200,
+        message: "Department members removed successfully",
+        data: department,
+      });
+    } catch (error) {
+      console.error("Error removing department members:", error);
+      res.status(500).send("Internal server error");
+    }
+  };
+  */
 }
 
 export default new DepartmentController();

@@ -8,7 +8,8 @@ const departmentSchema = new mongoose.Schema({
     ref: "organizations",
     required: true,
   },
-  managerId: { type: Schema.Types.String, ref: "users", required: false }
+  managerId: { type: Schema.Types.String, ref: "users", required: false },
+  memberIds: [{ type: Schema.Types.Array, ref: "users", required: false }]
 });
 
 const Department = mongoose.model("department", departmentSchema);
