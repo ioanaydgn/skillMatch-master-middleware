@@ -184,5 +184,35 @@ class ProjectController {
 
   }
 
+  // Get Project by ID endpoint
+  public GetProjectById = async (req: Request, res: Response) => {
+    this.functionName = "getProjectById";
+
+    try {
+      const { projectId } = req.params;
+
+      // Check if projectId is provided
+      if (!projectId) {
+        return res.status(400).send("projectId is required");
+      }
+
+      // Find the project by its ID
+      const project = await Project.findOne({ projectId });
+      if (!project) {
+        return res.status(404).send("Project not found");
+      }
+
+      // Respond with success message and project details
+      return res.status(200).json({
+        status: 200,
+        message: "Project found",
+        data: project,
+      });
+    } catch (error) {
+      console.error("Error updating project:", error);
+      res.status(500).send("Internal server error");
+    }
+  };
+
 }
 export default new ProjectController();
