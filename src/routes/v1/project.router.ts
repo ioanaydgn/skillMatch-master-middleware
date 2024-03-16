@@ -8,6 +8,7 @@ projectRouter.delete('/:projectId',(req,res) => { projectController.DeleteProjec
 projectRouter.put('/:projectId',(req,res) => { projectController.UpdateProject(req,res) });
 projectRouter.get('/:projectId',(req,res) => { projectController.GetProjectById(req,res) });
 projectRouter.post("/propose-project-assignment", (req, res) => { projectController.ProposeProjectAssignment(req, res) });
+projectRouter.post("/findAvailableEmployees", (req, res) => { projectController.FindAvailableEmployees(req, res) });
 
 
 export default projectRouter;
