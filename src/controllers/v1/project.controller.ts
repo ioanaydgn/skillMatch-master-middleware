@@ -1,8 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { Request, Response } from "express";
-import { Project, Organization } from "@models";
+import { Project, Organization, Team, User, Proposal} from "@models";
 import cors from "cors";
-import Team from "database/models/team.model";
 
 class ProjectController {
   internalError: string = "Internal server error";
@@ -161,28 +160,39 @@ class ProjectController {
 
   // Find Available Employees Endpoint
   public FindAvailableEmployees = async (req: Request, res: Response) => {
-    //Implement an endpoint to allow Project Managers to find available employees for a project based on specified criteria.
-    this.functionName = "findAvailableEmployees";
     try {
-      let { projectId } = req.body;
-      
-      let availableEmployees = await Team.find({ projectId:projectId});
-      
+      const { projectId, partiallyAvailable, closeToFinishWeeks, includeUnavailable } = req.body;
+  
+      // Query based on the provided criteria
+      let query: any = { projectId };
+  
+      if (!partiallyAvailable) {
+        query.workHours = { $lt: 8 };
+      }
+  
+      if (closeToFinishWeeks && closeToFinishWeeks >= 2 && closeToFinishWeeks <= 6) {
+        const maxDeadline = new Date();
+        maxDeadline.setDate(maxDeadline.getDate() + closeToFinishWeeks * 7); // Convert weeks to days
+        query.projectDeadline = { $lte: maxDeadline };
+      }
+  
+      if (!includeUnavailable) {
+        query.workHours = { $eq: 0 };
+      }
+  
+      const availableEmployees = await Team.find(query);
+  
       return res.status(200).json({
         status: 200,
         message: "Available Employees found",
         data: availableEmployees,
       });
-
-
-
-
     } catch (error) {
-      console.error("Error updating project:", error);
+      console.error("Error finding available employees:", error);
       res.status(500).send("Internal server error");
     }
-
-  }
+  };
+  
 
   // Get Project by ID endpoint
   public GetProjectById = async (req: Request, res: Response) => {
@@ -214,5 +224,76 @@ class ProjectController {
     }
   };
 
+  // Propose people for a project endpoint
+  public ProposeProjectAssignment = async (req: Request, res: Response) => {
+    try {
+      const { projectId, userId, workHours, roles, comments } = req.body;
+
+      //memberId is the user id
+      //projectId is the project id
+      //workHours is the number of hours the user has worked on the project
+      //roles is an array of roles that the user is assigned to
+      //comments is a comment that the user has made on the project
+
+      // Check if projectId is provided
+      if (!projectId) {
+        return res.status(400).send("projectId is required");
+      }
+
+      // Check if memberId is provided
+      if (!userId) {
+        return res.status(400).send("memberId is required");
+      }
+
+
+
+      // Check if workHours is provided
+      if (!workHours) {
+        return res.status(400).send("workHours is required");
+      }
+
+      // Check if roles is provided
+      if (!roles) {
+        return res.status(400).send("roles is required");
+      }
+
+      // Check if comments is provided
+  
+      // Validate work hours
+      if (isNaN(workHours) || workHours < 1 || workHours > 8) {
+        return res.status(400).json({ status: 400, message: "Invalid work hours" });
+      }
+  
+      // Validate roles (assuming roles is an array of strings)
+      if (!Array.isArray(roles) || roles.some(role => typeof role !== 'string')) {
+        return res.status(400).json({ status: 400, message: "Invalid roles" });
+      }
+  
+      // Validate other details as required
+  
+      // Create proposal object
+      const proposal = new Proposal({
+        projectId,
+        memberId: userId,
+        workHours,
+        roles,
+        comments,
+        // You may need to add other fields according to your schema
+      });
+  
+      // Save proposal to the database
+      await proposal.save();
+  
+      return res.status(200).json({
+        status: 200,
+        message: "Assignment proposal submitted successfully",
+        proposal: proposal // If you want to return the proposal object for reference
+      });
+    } catch (error) {
+      console.error("Error proposing project assignment:", error);
+      return res.status(500).send("Internal server error");
+    }
+  };
+  
 }
 export default new ProjectController();

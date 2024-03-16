@@ -1,5 +1,5 @@
 import express, { Application } from 'express';
-import { departmentRouter, projectRouter, organizationRouter } from '@routes';
+import { departmentRouter, projectRouter, organizationRouter, skillRouter } from '@routes';
 
 const app: Application = express();
 import cors from 'cors';
@@ -22,5 +22,6 @@ const version = '/v1';
 app.use(`${version}/department`, departmentRouter);
 app.use(`${version}/project`, projectRouter);
 app.use(`${version}/organization`, organizationRouter);
+app.use(`${version}/skill`, skillRouter);
 
 export default app;

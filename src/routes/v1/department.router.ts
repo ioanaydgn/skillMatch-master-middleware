@@ -10,5 +10,7 @@ departmentRouter.put("/:departmentId" ,(req, res) => departmentController.Update
 departmentRouter.get("/:departmentId",(req, res) => departmentController.GetDepartment(req, res));
 departmentRouter.post("/assign-department-manager" ,(req, res) => departmentController.AssignDepartmentManager(req, res));
 departmentRouter.post("/assign-department-members",(req, res) => departmentController.AssignDepartmentMembers(req, res));
+
+
 //departmentRouter.post("/remove-department-members",(req, res) => departmentController.RemoveDepartmentMembers(req, res));
 export default departmentRouter;

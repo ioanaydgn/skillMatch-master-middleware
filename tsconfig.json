@@ -14,7 +14,8 @@
       "@config": ["config"],
       "@models": ["database/models"],
       "@routes": ["routes/v1"],
-      "@middlewares": ["middlewares"]
+      "@middlewares": ["middlewares"],
+      "@controllers": ["controllers"],
     }
   }
 }
