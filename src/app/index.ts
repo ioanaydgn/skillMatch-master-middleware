@@ -1,10 +1,10 @@
 import express, { Application } from 'express';
-import { departmentRouter, projectRouter, organizationRouter, skillRouter } from '@routes';
+import { departmentRouter, projectRouter, organizationRouter, skillRouter, customRoleRouter } from '@routes';
 
 const app: Application = express();
 import cors from 'cors';
 
-import { authApiKey, globalRateLimiter } from 'middlewares';
+
 app.use(express.json());
 
 app.use(cors());
@@ -23,5 +23,7 @@ app.use(`${version}/department`, departmentRouter);
 app.use(`${version}/project`, projectRouter);
 app.use(`${version}/organization`, organizationRouter);
 app.use(`${version}/skill`, skillRouter);
+app.use(`${version}/roles`, customRoleRouter);
+app.use(`${version}/team`, customRoleRouter);
 
 export default app;

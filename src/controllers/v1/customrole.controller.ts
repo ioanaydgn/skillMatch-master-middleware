@@ -11,28 +11,23 @@ class CustomRoleController {
         this.functionName = "createCustomRole";
         try {
             let customRoleId = req.params.organizationId;
-            const { customRolesId, customRoleName, userId, customRoleAuthor } = req.body;
+            const { organziationId,customRoleName, userId, customRoleAuthor } = req.body;
 
             // Check if customRoleId & customRoleName are provided
-            if (!customRoleId || !customRoleName || !customRoleName || !userId || !customRoleAuthor) {
-                return res.status(400).send("customRoleId , customRoleName , userId & customRoleAuthor are required");
+            if (!organziationId || !customRoleName || !userId || !customRoleAuthor) {
+                return res.status(400).send("organziationId , customRoleName , userId & customRoleAuthor are required");
             }
-
-            // Find the custom role by its ID
-            let customRole = await CustomRoles.findOne({ customRolesId });
-            if (!customRole) {
-                return res.status(404).send("Custom Role not found");
-            }
+            
 
             // Check if custom role with the same name already exists
             let existingCustomRole = await CustomRoles.findOne({ customRoleName });
-            if (existingCustomRole && existingCustomRole.customRoleId!== customRole.customRoleId) {
+            if (existingCustomRole) {
                 return res.status(400).send("Custom Role already exists");
             }
 
             // Check if user with the same id already exists
             let existingUser = await User.findOne({ userId });
-            if (existingUser && existingUser.userId!== customRole.userId) {
+            if (existingUser && existingUser.userId!== userId) {
                 return res.status(400).send("User already exists");
             }
 
@@ -40,6 +35,7 @@ class CustomRoleController {
             const newCustomRole = new CustomRoles({
                 customRolesId: uuidv4(),
                 customRoleName,
+                organziationId: organziationId,
                 userId,
                 customRoleAuthor,
             });

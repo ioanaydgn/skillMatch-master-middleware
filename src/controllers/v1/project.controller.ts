@@ -192,7 +192,7 @@ class ProjectController {
       res.status(500).send("Internal server error");
     }
   };
-  
+
 
   // Get Project by ID endpoint
   public GetProjectById = async (req: Request, res: Response) => {
@@ -292,6 +292,30 @@ class ProjectController {
     } catch (error) {
       console.error("Error proposing project assignment:", error);
       return res.status(500).send("Internal server error");
+    }
+  };
+
+  // View Assignment Proposals Endpoint
+  public ViewAssignmentProposals = async (req: Request, res: Response) => {
+    try {
+      const { projectId } = req.params;
+
+      // Check if projectId is provided
+      if (!projectId) {
+        return res.status(400).send("projectId is required");
+      }
+
+      // Find the project by its ID
+      const project = await Project.findOne({ projectId });
+      if (!project) {
+        return res.status(404).send("Project not found");
+      }
+
+      // Find all proposals for the project
+      const proposals = await Proposal.find({ projectId });
+    } catch (error) {
+      console.error("Error finding assignment proposals:", error);
+      res.status(500).send("Internal server error");
     }
   };
   
