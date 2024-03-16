@@ -146,7 +146,7 @@ class skillController {
 
     try {
       let skills = await Skill.find({
-        organizationId: req.params.organizationId,
+        departmentId: req.params.departmentId,
       });
       if (!skills) {
         return res.status(404).send("Skills not found");

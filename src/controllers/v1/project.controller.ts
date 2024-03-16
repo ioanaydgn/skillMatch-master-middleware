@@ -299,25 +299,29 @@ class ProjectController {
   public ViewAssignmentProposals = async (req: Request, res: Response) => {
     try {
       const { projectId } = req.params;
-
-      // Check if projectId is provided
+  
+      // Validate projectId
       if (!projectId) {
         return res.status(400).send("projectId is required");
       }
-
-      // Find the project by its ID
-      const project = await Project.findOne({ projectId });
-      if (!project) {
-        return res.status(404).send("Project not found");
-      }
-
-      // Find all proposals for the project
+  
+      // Retrieve all proposals for the organization
       const proposals = await Proposal.find({ projectId });
+  
+      // If no proposals found, return a 204 (No Content) status
+      if (!proposals.length) {
+        return res.status(204).send();
+      }
+  
+      // Return the retrieved proposals
+      return res.status(200).json({ proposals });
     } catch (error) {
-      console.error("Error finding assignment proposals:", error);
-      res.status(500).send("Internal server error");
+      console.error("Error retrieving assignment proposals:", error);
+      return res.status(500).send("Internal server error");
     }
   };
+  
+  
   
 }
 export default new ProjectController();
