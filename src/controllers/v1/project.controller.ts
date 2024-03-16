@@ -273,6 +273,7 @@ class ProjectController {
   
       // Create proposal object
       const proposal = new Proposal({
+        proposalId: uuidv4(),
         projectId,
         memberId: userId,
         workHours,

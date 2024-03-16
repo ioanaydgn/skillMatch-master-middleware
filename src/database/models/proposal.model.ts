@@ -1,6 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 
 const ProposalSchema = new mongoose.Schema({
+  proposalId: {type: "string"},
   projectId: { type: Schema.Types.String, ref: "projects", required: true },
   memberId: { type: Schema.Types.String, ref: "users", required: true },
   workHours: { type: Number, required: true },
