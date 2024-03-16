@@ -169,6 +169,31 @@ class skillController {
     }
   };
 
+  // get a skill by id endpoint
+  public GetSkillById = async (req: Request, res: Response) => {
+    this.functionName = "getSkillById";
+
+    try {
+      let skill = await Skill.findOne({ skillId: req.params.skillId });
+      if (!skill) {
+        return res.status(404).send("Skill not found");
+      }
+
+      let filteredSkill = {
+        skillId: skill.skillId,
+        skillName: skill.skillName,
+        skillAuthor: skill.skillAuthor,
+        skillCategory: skill.skillCategory,
+        departmentId: skill.departmentId,
+      };
+
+      return res.status(200).send(filteredSkill); // Sadece filteredUsers'ı gönder
+    } catch (error) {
+      console.error("Error getting skill:", error);
+      res.status(500).send(this.internalError);
+    }
+  };
+
   //[Skill-02] Skill Assignment
   public AssignSkill = async (req: Request, res: Response) => {
     this.functionName = "assignSkill";

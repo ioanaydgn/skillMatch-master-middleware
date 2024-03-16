@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { User, CustomRoles } from "@models";
-import {v4 as  uuidv4} from "uuid";
+import { v4 as uuidv4 } from "uuid";
 
 class CustomRoleController {
     internalError: string = "Internal server error";
@@ -10,7 +10,6 @@ class CustomRoleController {
     public CreateCustomRole = async (req: Request, res: Response) => {
         this.functionName = "createCustomRole";
         try {
-            let customRoleId = req.params.organizationId;
             const { organziationId,customRoleName, userId, customRoleAuthor } = req.body;
 
             // Check if customRoleId & customRoleName are provided
@@ -33,8 +32,8 @@ class CustomRoleController {
 
             // Create a new custom role object
             const newCustomRole = new CustomRoles({
-                customRolesId: uuidv4(),
                 customRoleName,
+                customRoleId: uuidv4(),
                 organziationId: organziationId,
                 userId,
                 customRoleAuthor,
@@ -44,8 +43,8 @@ class CustomRoleController {
             await newCustomRole.save();
 
             // Respond with success message
-            res.status(200).send({
-                status: 200,
+            res.status(201).send({
+                status: 201,
                 message: "Custom Role created successfully",
                 data: newCustomRole,
             });

@@ -3,6 +3,6 @@ import { Router } from "express";
 
 let teamRouter = Router();
 
-teamRouter.post('/',(req,res) => { teamController.CreateTeam(req,res) });
+teamRouter.post('/c',(req,res) => { teamController.CreateTeam(req,res) });
 
 export default teamRouter;

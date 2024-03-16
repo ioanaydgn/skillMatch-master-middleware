@@ -1,5 +1,5 @@
 import express, { Application } from 'express';
-import { departmentRouter, projectRouter, organizationRouter, skillRouter, customRoleRouter } from '@routes';
+import { departmentRouter, projectRouter, organizationRouter, skillRouter, customRoleRouter, teamRouter } from '@routes';
 
 const app: Application = express();
 import cors from 'cors';
@@ -24,6 +24,6 @@ app.use(`${version}/project`, projectRouter);
 app.use(`${version}/organization`, organizationRouter);
 app.use(`${version}/skill`, skillRouter);
 app.use(`${version}/roles`, customRoleRouter);
-app.use(`${version}/team`, customRoleRouter);
+app.use(`${version}/team`, teamRouter);
 
 export default app;
