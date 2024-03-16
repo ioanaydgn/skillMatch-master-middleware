@@ -10,7 +10,7 @@ class TeamController {
   public CreateTeam = async (req: Request, res: Response) => {
     this.functionName = "createTeam";
     try {
-      let { assignmentStatus, workHours, teamComments, projectId, memberIds, customRoleId } =
+      let { assignmentStatus, workHours, teamComments, projectId, customRoleId } =
         req.body;
 
       // Check if projectId is provided
@@ -30,11 +30,6 @@ class TeamController {
       const customRole = await CustomRoles.findOne({ customRoleId });
       if (!customRole) {
         return res.status(404).send("Custom Role not found");
-      }
-
-      // Check if memberIds is provided
-      if (!memberIds || memberIds.length === 0) {
-        return res.status(400).send("At least one memberId is required");
       }
 
 
