@@ -6,15 +6,12 @@ import cors from 'cors';
 
 
 app.use(express.json());
-
 app.use(cors());
 
-// 60 requests per minute
-//app.use(globalRateLimiter);
 
-// redirect to notie.xyz
+// redirect to my site ^.^
 app.get('/', (_, res) => {
-  res.redirect('https://notie.xyz');
+  res.redirect('https://aydgn.me');
 });
 
 const version = '/v1';

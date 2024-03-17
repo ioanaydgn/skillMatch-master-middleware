@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { Request, Response } from "express";
-import { Project, Organization, Team, User, Proposal} from "@models";
+import { Project, Organization, Team, User, Proposal } from "@models";
 import cors from "cors";
 
 class ProjectController {
@@ -161,27 +161,36 @@ class ProjectController {
   // Find Available Employees Endpoint
   public FindAvailableEmployees = async (req: Request, res: Response) => {
     try {
-      const { projectId, partiallyAvailable, closeToFinishWeeks, includeUnavailable } = req.body;
-  
+      const {
+        projectId,
+        partiallyAvailable,
+        closeToFinishWeeks,
+        includeUnavailable,
+      } = req.body;
+
       // Query based on the provided criteria
       let query: any = { projectId };
-  
+
       if (!partiallyAvailable) {
         query.workHours = { $lt: 8 };
       }
-  
-      if (closeToFinishWeeks && closeToFinishWeeks >= 2 && closeToFinishWeeks <= 6) {
+
+      if (
+        closeToFinishWeeks &&
+        closeToFinishWeeks >= 2 &&
+        closeToFinishWeeks <= 6
+      ) {
         const maxDeadline = new Date();
         maxDeadline.setDate(maxDeadline.getDate() + closeToFinishWeeks * 7); // Convert weeks to days
         query.projectDeadline = { $lte: maxDeadline };
       }
-  
+
       if (!includeUnavailable) {
         query.workHours = { $eq: 0 };
       }
-  
+
       const availableEmployees = await Team.find(query);
-  
+
       return res.status(200).json({
         status: 200,
         message: "Available Employees found",
@@ -192,7 +201,6 @@ class ProjectController {
       res.status(500).send("Internal server error");
     }
   };
-
 
   // Get Project by ID endpoint
   public GetProjectById = async (req: Request, res: Response) => {
@@ -245,8 +253,6 @@ class ProjectController {
         return res.status(400).send("memberId is required");
       }
 
-
-
       // Check if workHours is provided
       if (!workHours) {
         return res.status(400).send("workHours is required");
@@ -258,19 +264,24 @@ class ProjectController {
       }
 
       // Check if comments is provided
-  
+
       // Validate work hours
       if (isNaN(workHours) || workHours < 1 || workHours > 8) {
-        return res.status(400).json({ status: 400, message: "Invalid work hours" });
+        return res
+          .status(400)
+          .json({ status: 400, message: "Invalid work hours" });
       }
-  
+
       // Validate roles (assuming roles is an array of strings)
-      if (!Array.isArray(roles) || roles.some(role => typeof role !== 'string')) {
+      if (
+        !Array.isArray(roles) ||
+        roles.some((role) => typeof role !== "string")
+      ) {
         return res.status(400).json({ status: 400, message: "Invalid roles" });
       }
-  
+
       // Validate other details as required
-  
+
       // Create proposal object
       const proposal = new Proposal({
         proposalId: uuidv4(),
@@ -281,14 +292,14 @@ class ProjectController {
         comments,
         // You may need to add other fields according to your schema
       });
-  
+
       // Save proposal to the database
       await proposal.save();
-  
+
       return res.status(200).json({
         status: 200,
         message: "Assignment proposal submitted successfully",
-        proposal: proposal // If you want to return the proposal object for reference
+        proposal: proposal, // If you want to return the proposal object for reference
       });
     } catch (error) {
       console.error("Error proposing project assignment:", error);
@@ -296,24 +307,56 @@ class ProjectController {
     }
   };
 
+  // Delete Proposal
+  public DeleteProposal = async (req: Request, res: Response) => {
+    this.functionName = "deleteProposal";
+    try {
+      let { proposalId } = req.params;
+      // Check if proposalId is provided
+      if (!proposalId) {
+        return res.status(400).send("proposalId is required");
+      }
+
+      // Find the project by its ID
+      const proposal = await Proposal.findOne({ proposalId });
+      if (!proposal) {
+        return res.status(404).send("Proposal not found");
+      }
+
+      // Delete the proposal from the database
+      const deletedProject = await Proposal.findOneAndDelete({
+        proposalId,
+      });
+
+      // Respond with success message
+      return res.status(200).send({
+        status: 200,
+        message: "Proposal deleted successfully",
+      });
+    } catch (error) {
+      console.error("Error updating department:", error);
+      res.status(500).send("Internal server error");
+    }
+  };
+
   // View Assignment Proposals Endpoint
   public ViewAssignmentProposals = async (req: Request, res: Response) => {
     try {
       const { projectId } = req.params;
-  
+
       // Validate projectId
       if (!projectId) {
         return res.status(400).send("projectId is required");
       }
-  
+
       // Retrieve all proposals for the organization
       const proposals = await Proposal.find({ projectId });
-  
+
       // If no proposals found, return a 204 (No Content) status
       if (!proposals.length) {
         return res.status(204).send();
       }
-  
+
       // Return the retrieved proposals
       return res.status(200).json({ proposals });
     } catch (error) {
@@ -321,8 +364,5 @@ class ProjectController {
       return res.status(500).send("Internal server error");
     }
   };
-  
-  
-  
 }
 export default new ProjectController();

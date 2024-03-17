@@ -1,10 +1,11 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import { User, CustomRoles, Organization } from "@models";
 import { v4 as uuidv4 } from "uuid";
 
 class CustomRoleController {
     internalError: string = "Internal server error";
     functionName: string = "";
+
 
     // Create a new custom role endpoint
     public CreateCustomRole = async (req: Request, res: Response) => {
@@ -165,6 +166,8 @@ class CustomRoleController {
             res.status(500).send(this.internalError);
         }
     }
+
+
 }
 
 export default new CustomRoleController();

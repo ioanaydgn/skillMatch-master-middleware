@@ -23,7 +23,7 @@ function authToken(
           return responseSender.sendErrorResponse(res, 403, "Invalid token");
         if (user.tokenType !== "access")
           return responseSender.sendErrorResponse(res, 403, "Invalid token");
-        const foundUser = await User.findOne({ userId: user.user.userId });
+        const foundUser = await User.findOne({ userId: user.userId });
         if (!foundUser)
           return responseSender.sendErrorResponse(res, 404, "User not found");
         req.body.user = user.user;

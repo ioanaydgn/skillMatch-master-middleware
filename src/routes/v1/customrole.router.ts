@@ -1,15 +1,34 @@
 import customroleController from "controllers/v1/customrole.controller";
+
 import { Router } from "express";
-import { authToken } from "middlewares";
+import { authToken, roleConstraint } from "middlewares";
 
 let customRoleRouter = Router();
 
-
-customRoleRouter.post("/create" ,(req, res) => customroleController.CreateCustomRole(req, res));
-customRoleRouter.delete("/:customRoleId" ,(req, res) => customroleController.DeleteCustomRole(req, res));
-customRoleRouter.put("/:customRoleId" ,(req, res) => customroleController.UpdateCustomRole(req, res));
-customRoleRouter.get("/:customRoleId",(req, res) => customroleController.GetCustomRoleById(req, res));
-customRoleRouter.get("/o/:organizationId",(req, res) => customroleController.GetAllCustomRoles(req, res));
-
+customRoleRouter.post(
+  "/create",
+  roleConstraint("admin"),
+  customroleController.CreateCustomRole
+);
+customRoleRouter.delete(
+  "/:customRoleId",
+  roleConstraint("admin"),
+  customroleController.DeleteCustomRole
+);
+customRoleRouter.put(
+  "/:customRoleId",
+  roleConstraint("admin"),
+  customroleController.UpdateCustomRole
+);
+customRoleRouter.get(
+  "/:customRoleId",
+  roleConstraint("employee"),
+  customroleController.GetCustomRoleById
+);
+customRoleRouter.get(
+  "/organization/:organizationId",
+  roleConstraint("manager"),
+  customroleController.GetAllCustomRoles
+);
 
 export default customRoleRouter;
