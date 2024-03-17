@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Organization, User, Department, Project } from "@models";
+import { Organization, User, Department, Project, Skill } from "@models";
 
 class OrganizationController {
   internalError: string = "Internal server error";
@@ -114,6 +114,40 @@ class OrganizationController {
       return res.status(200).send(filteredOrganization); // Sadece filteredUsers'ı gönder
     } catch (error) {
       console.error("Error getting organization:", error);
+      res.status(500).send(this.internalError);
+    }
+  };
+
+  // Get all Skills with organization
+  public GetSkillsInOrganization = async (req: Request, res: Response) => {
+    this.functionName = "getSkillsInOrganization";
+    try {
+      let organizationId = req.params.organizationId;
+      if (!organizationId) {
+        return res.status(400).send("Organization ID is required");
+      }
+
+      let department = await Department.find({ organizationId });
+      if (!department) {
+        return res.status(404).send("Organization not found");
+      }
+
+      let departmentId = department.map((department) => {
+        return department.departmentId;
+      });
+
+      let skills = await Skill.find({ departmentId });
+
+      let filteredSkills = skills.map((skill) => {
+        return {
+          skillId: skill.skillId,
+          skillName: skill.skillName,
+          skillAuthor: skill.skillAuthor,
+        };
+      });
+      return res.status(200).send(filteredSkills); // Sadece filteredUsers'ı gönder
+    } catch (err) {
+      console.error("Error getting organization:", err);
       res.status(500).send(this.internalError);
     }
   };
