@@ -6,6 +6,7 @@ const skillSchema = new mongoose.Schema({
     skillCategory: { type: String, required: true },
     skillAuthor: { type: Schema.Types.String, ref: 'users', required: true},
     departmentId: { type: Schema.Types.String, ref: 'departments' ,required: true },
+    organizationId: { type: Schema.Types.String, ref: 'organizations', required: true },
 });
 
 const Skills = mongoose.model("skills", skillSchema);

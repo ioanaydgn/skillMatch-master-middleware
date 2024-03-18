@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { Request, Response } from "express";
-import { Department, Skill, User, EmployeeSkills } from "@models";
+import { Department, Skill, User, EmployeeSkills, Organization } from "@models";
 
 class skillController {
   internalError: string = "Internal server error";
@@ -10,19 +10,26 @@ class skillController {
   public CreateSkill = async (req: Request, res: Response) => {
     this.functionName = "createSkill";
     try {
-      const { departmentId, skillName, skillAuthor, skillCategory } = req.body;
+      const { organizationId, departmentId, skillName, skillAuthor, skillCategory } = req.body;
 
       // Check if departmentId & skillName are provided
-      if (!departmentId || !skillName || !skillAuthor || !skillCategory) {
+      if (!organizationId || !departmentId || !skillName || !skillAuthor || !skillCategory) {
         return res
           .status(400)
           .send(
-            "departmentId, skillName, skillAuthor and skillCategory are required"
+            "organizationId,departmentId, skillName, skillAuthor and skillCategory are required"
           );
       }
 
+      // Find the organizarionId by its departmentId and check if it exists
+      let organization = await Department.findOne({ organizationId });
+      if (!organization) {
+        return res.status(404).send("Organization not found");
+      }
+
+
       // Find the department by its ID
-      let department = await Department.findOne({ departmentId });
+      let department = await Department.findOne({ organizationId, departmentId});
       if (!department) {
         return res.status(404).send("Department not found");
       }
@@ -40,6 +47,7 @@ class skillController {
         skillAuthor,
         skillCategory,
         departmentId: department.departmentId,
+        organizationId: organization.organizationId,
       });
 
       // Save the new skill to the database
