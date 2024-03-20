@@ -83,7 +83,7 @@ class TeamController {
         return res.status(404).send("User not found");
       }
 
-      team.memberIds = userId;
+      team.memberIds.push(userId);
 
       // Save the updated team to the database
       await team.save();
