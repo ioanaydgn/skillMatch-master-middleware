@@ -11,6 +11,7 @@ projectRouter.post("/p/propose-project-assignment", (req, res) => { projectContr
 projectRouter.post("/p/findAvailableEmployees", (req, res) => { projectController.FindAvailableEmployees(req, res) });
 projectRouter.get("/p/:projectId",(req,res) => { projectController.ViewAssignmentProposals(req,res) });
 projectRouter.delete("/p/:proposalId",(req,res) => { projectController.DeleteProposal(req,res) });
+//projectRouter.get("/f/:projectId",(req,res) => { projectController.FindAvailableEmployees(req,res) });
 
 
 export default projectRouter;

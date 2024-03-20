@@ -255,6 +255,32 @@ class DepartmentController {
       res.status(500).send("Internal server error");
     }
   };
+
+  // View department members endpoint
+  public ViewDepartmentMembers = async (req: Request, res: Response) => {
+    this.functionName = "viewDepartmentMembers";
+    try {
+      const { departmentId } = req.params;
+      // Check if departmentId is provided
+      if (!departmentId) {
+        return res.status(400).send("Department ID is required");
+      }
+      // Find the department by its ID
+      const department = await Department.findOne({ departmentId });
+      if (!department) {
+        return res.status(404).send("Department not found");
+      }
+      // Respond with success message and department details
+      res.status(200).send({
+        status: 200,
+        message: "Department members retrieved successfully",
+        data: department,
+      });
+    } catch (error) {
+      console.error("Error retrieving department members:", error);
+      res.status(500).send("Internal server error");
+    }
+  };
 }
 
 export default new DepartmentController();

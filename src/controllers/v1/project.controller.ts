@@ -158,6 +158,59 @@ class ProjectController {
     }
   };
 
+  /*
+  // Find Available Employees Endpoint
+  public FindAvailableEmployees = async (req: Request, res: Response) => {
+    this.functionName = "findAvailableEmployees";
+    try {
+      const { projectId } = req.params;
+
+      // Check if projectId is provided
+      if (!projectId) {
+        return res.status(400).send("projectId is required");
+      }
+
+      // Find the project by its ID
+      const project = await Project.findOne({ projectId });
+      if (!project) {
+        return res.status(404).send("Project not found");
+      }
+
+      // Find all the teams that are assigned to the project
+      const teams = await Team.find({ projectId });
+
+      // If no teams found, return a 204 (No Content) status
+      if (!teams.length) {
+        return res.status(204).send();
+      }
+
+      // Retrieve all the members assigned to the teams
+      const teamMembers = teams.map((team) => team.memberIds);
+
+      // If no team members found, return a 204 (No Content) status
+      if (!teamMembers.length) {
+        return res.status(204).send();
+      }
+
+      // Retrieve all the user IDs of the team members
+      const userIds = teamMembers.flatMap((members) => members.map((member) => member.toString()));
+
+      // Retrieve all the users that are not in the team members
+      const availableEmployees = await User.find({ userId: { $nin: userIds } });
+
+      // If no available employees found, return a 204 (No Content) status
+      if (!availableEmployees.length) {
+        return res.status(204).send();
+      }
+
+      // Return the retrieved available employees
+      return res.status(200).json({ availableEmployees });
+    } catch (error) {
+      console.error("Error finding available employees:", error);
+      res.status(500).send("Internal server error");
+    }
+  };
+  */
   // Find Available Employees Endpoint
   public FindAvailableEmployees = async (req: Request, res: Response) => {
     try {
@@ -194,7 +247,7 @@ class ProjectController {
       return res.status(200).json({
         status: 200,
         message: "Available Employees found",
-        data: availableEmployees,
+        data: {availableEmployees}
       });
     } catch (error) {
       console.error("Error finding available employees:", error);
