@@ -9,5 +9,6 @@ organizationRouter.get("/o/:organizationId",(req,res) => organizationController.
 organizationRouter.get("/p/:organizationId",(req,res) => organizationController.GetProjectInOrganization(req,res));
 organizationRouter.get("/v/:organizationName",(req,res) => organizationController.GetOrganizationId(req,res));
 organizationRouter.get("/s/:organizationId",(req,res) => organizationController.GetSkillsInOrganization(req,res));
+organizationRouter.get("/u/:url",(req,res) => organizationController.GetUrlToOrganizationID(req,res));
 
 export default organizationRouter;

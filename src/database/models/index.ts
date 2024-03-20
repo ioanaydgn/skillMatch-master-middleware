@@ -8,5 +8,6 @@ import CustomRoles from "./customrole.model";
 import EmployeeSkills from "./employeeskills.model";
 import Team from "./team.model";
 import Proposal from "./proposal.model";
+import Url from "./url.model";
 
-export { ApiKey, User, Department, Organization, Project, Skill, CustomRoles, EmployeeSkills, Team , Proposal };
+export { ApiKey, User, Department, Organization, Project, Skill, CustomRoles, EmployeeSkills, Team , Proposal, Url };

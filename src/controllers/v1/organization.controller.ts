@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Organization, User, Department, Project, Skill } from "@models";
+import { Organization, User, Department, Project, Skill, Url } from "@models";
 
 class OrganizationController {
   internalError: string = "Internal server error";
@@ -25,6 +25,27 @@ class OrganizationController {
       });
 
       return res.status(200).send(filteredUsers); // Sadece filteredUsers'ı gönder
+    } catch (error) {
+      console.error("Error getting organization:", error);
+      res.status(500).send(this.internalError);
+    }
+  };
+
+  // Get url to organizationId
+  public GetUrlToOrganizationID = async (req: Request, res: Response) => {
+    this.functionName = "GetUrlToOrganizationID";
+    try {
+      let urlLogin = req.params.url;
+      if (!urlLogin) {
+        return res.status(400).send("Organization ID is required");
+      }
+      let url = await Url.findOne({
+        urlLogin: this.GetOrganizationId,
+      });
+      if (!url) {
+        return res.status(404).send("URL not found");
+      }
+      return res.status(200).send({ OrganizationId: url.organizationId });
     } catch (error) {
       console.error("Error getting organization:", error);
       res.status(500).send(this.internalError);
