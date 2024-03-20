@@ -240,8 +240,9 @@ class DepartmentController {
       if (!users || users.length === 0) {
         return res.status(404).send("Users not found");
       }
-      // Assign the department members
-      department.memberIds = userId;
+      // add the current userId to the memberIds array
+      department.memberIds.push(userId);
+
       // Save the updated department to the database
       await department.save();
       // Respond with success message and department details
